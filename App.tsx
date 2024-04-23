@@ -1,10 +1,10 @@
 import Theme from "./src/themes";
-import { Signup } from "./src/screens/Signup";
+import { Signin } from "./src/screens/Signin";
 
 export default function App() {
     return (
         <Theme>
-            <Signup />
+            <Signin />
         </Theme>
     );
 }
