@@ -2,6 +2,7 @@ import React from "react";
 import logo from "../../assets/logo.svg";
 import {
     Background,
+    Bottom,
     Card,
     EnterAccount,
     LinkText,
@@ -17,6 +18,8 @@ import { Input } from "../../components/Input";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useTheme } from "styled-components";
 import { TouchableOpacity } from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { AuthRoutesStackParamsList } from "../../routes/auth.routes";
 
 const FormSchema = z.object({
     name: z
@@ -34,7 +37,9 @@ const FormSchema = z.object({
 
 type FormSchemaType = z.infer<typeof FormSchema>;
 
-export const Signup = () => {
+type Props = StackScreenProps<AuthRoutesStackParamsList, "Signup">;
+
+export const Signup = ({ navigation: { navigate } }: Props) => {
     const theme = useTheme();
     const methods = useForm<FormSchemaType>({
         resolver: zodResolver(FormSchema),
@@ -81,16 +86,22 @@ export const Signup = () => {
                             secureTextEntry
                         />
                     </FormProvider>
-                    <Button
-                        children="Cadastrar"
-                        onPress={handleSubmit(() => console.log("cadastrar"))}
-                    />
-                    <Row>
-                        <EnterAccount>Não possui conta?</EnterAccount>
-                        <TouchableOpacity onPress={() => console.log("login")}>
-                            <LinkText>Entrar</LinkText>
-                        </TouchableOpacity>
-                    </Row>
+                    <Bottom>
+                        <Button
+                            children="Cadastrar"
+                            onPress={handleSubmit(() =>
+                                console.log("cadastrar")
+                            )}
+                        />
+                        <Row>
+                            <EnterAccount>Não possui conta?</EnterAccount>
+                            <TouchableOpacity
+                                onPress={() => navigate("Signin")}
+                            >
+                                <LinkText>Entrar</LinkText>
+                            </TouchableOpacity>
+                        </Row>
+                    </Bottom>
                 </Card>
             </Background>
         </KeyboardAwareScrollView>

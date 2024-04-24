@@ -29,6 +29,12 @@ export const Title = styled.Text`
     margin-bottom: ${(props) => props.theme.spaces.lg};
 `;
 
+export const Bottom = styled.View`
+    margin-top: ${(props) => props.theme.spaces.xxxl};
+    flex: 1;
+    justify-content: space-between;
+`;
+
 export const Row = styled.View`
     margin-top: ${(props) => props.theme.spaces.xxxl};
 

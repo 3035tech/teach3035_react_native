@@ -1,10 +1,13 @@
 import Theme from "./src/themes";
-import { Signin } from "./src/screens/Signin";
+import Routes from "./src/routes";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function App() {
     return (
-        <Theme>
-            <Signin />
-        </Theme>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <Theme>
+                <Routes />
+            </Theme>
+        </GestureHandlerRootView>
     );
 }

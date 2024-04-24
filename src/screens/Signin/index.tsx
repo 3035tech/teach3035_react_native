@@ -18,6 +18,8 @@ import { Input } from "../../components/Input";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useTheme } from "styled-components";
 import { TouchableOpacity } from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { AuthRoutesStackParamsList } from "../../routes/auth.routes";
 
 const FormSchema = z.object({
     email: z
@@ -31,7 +33,9 @@ const FormSchema = z.object({
 
 type FormSchemaType = z.infer<typeof FormSchema>;
 
-export const Signin = () => {
+type Props = StackScreenProps<AuthRoutesStackParamsList, "Signin">;
+
+export const Signin = ({ navigation: { navigate } }: Props) => {
     const theme = useTheme();
     const methods = useForm<FormSchemaType>({
         resolver: zodResolver(FormSchema),
@@ -80,7 +84,7 @@ export const Signin = () => {
                         <Row>
                             <CreateAccount>Não possui conta?</CreateAccount>
                             <TouchableOpacity
-                                onPress={() => console.log("cadastre-se")}
+                                onPress={() => navigate("Signup")}
                             >
                                 <LinkText>Cadastre-se</LinkText>
                             </TouchableOpacity>
