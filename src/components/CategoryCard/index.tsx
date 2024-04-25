@@ -9,7 +9,7 @@ type Props = {
 };
 export const CategoryCard = ({ categoryName, imageUri, onPress }: Props) => {
     return (
-        <Pressable>
+        <Pressable onPress={onPress}>
             <Container source={{ uri: imageUri }}>
                 <Overlay />
                 <Label>{categoryName}</Label>
