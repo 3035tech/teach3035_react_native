@@ -40,7 +40,7 @@ export const Title = styled.Text`
     font-size: ${(props) => props.theme.fontSize.lg};
     color: ${(props) => props.theme.colors.white};
 
-    line-height: ${(props) => props.theme.spaces.lg};
+    line-height: ${(props) => props.theme.spaces.xl};
     margin-bottom: ${(props) => props.theme.spaces.sm};
 `;
 

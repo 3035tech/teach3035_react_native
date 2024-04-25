@@ -33,3 +33,17 @@ export const StyledCustomSearchButton = styled(CustomSearchButton)`
     margin: ${(props) => props.theme.spaces.lg}
         ${(props) => props.theme.spaces.xxl};
 `;
+
+export const Row = styled.View`
+    flex-direction: row;
+    align-items: center;
+    gap: ${(props) => props.theme.spaces.lg};
+    margin-top: ${(props) => props.theme.spaces.lg};
+    margin-left: ${(props) => props.theme.spaces.xxxl};
+`;
+
+export const Title = styled.Text`
+    font-family: ${(props) => props.theme.fonts.bold};
+    font-size: ${(props) => props.theme.fontSize.xl};
+    color: ${(props) => props.theme.colors.gray900};
+`;
