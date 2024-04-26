@@ -89,8 +89,8 @@ export const Home = ({ navigation: { navigate } }: Props) => {
                     )}
                 />
 
-                <Row>
-                    <Title> Descubra</Title>
+                <Row onPress={() => navigate("AllRecipes")}>
+                    <Title>Descubra</Title>
                     <Icon name="chevron-forward" size={20} />
                 </Row>
 

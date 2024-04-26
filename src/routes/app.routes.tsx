@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { MainTabs, TabNavigationParamsList } from "./mainTabs.routes";
 import { CustomSearch } from "../screens/CustomSearch";
 import { CustomSearchList } from "../screens/CustomSearchList";
+import { AllRecipes } from "../screens/AllRecipes";
 
 type NewType = NavigatorScreenParams<TabNavigationParamsList>;
 
@@ -12,6 +13,7 @@ export type RootStackParamList = {
     CustomSearchList: {
         ingredients: string[];
     };
+    AllRecipes: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -31,6 +33,7 @@ const AppRootStack = () => {
                 name="CustomSearchList"
                 component={CustomSearchList}
             />
+            <Stack.Screen name="AllRecipes" component={AllRecipes} />
         </Stack.Navigator>
     );
 };

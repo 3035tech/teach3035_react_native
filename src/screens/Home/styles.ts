@@ -34,7 +34,7 @@ export const StyledCustomSearchButton = styled(CustomSearchButton)`
         ${(props) => props.theme.spaces.xxl};
 `;
 
-export const Row = styled.View`
+export const Row = styled.TouchableOpacity`
     flex-direction: row;
     align-items: center;
     gap: ${(props) => props.theme.spaces.lg};
