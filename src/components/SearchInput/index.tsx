@@ -14,10 +14,11 @@ export const SearchInput = ({
     hasFilterIcon = true,
     onClickFilter,
     onPress,
+    style,
     ...props
 }: Props) => {
     return (
-        <Pressable onPress={onPress}>
+        <Pressable onPress={onPress} style={style}>
             <InputContainer>
                 <Icon name="search" color="#B5B5B5" size={20} />
 

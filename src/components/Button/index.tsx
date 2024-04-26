@@ -6,11 +6,12 @@ type Props = TouchableOpacityProps & {
     children: ReactNode;
     onPress: () => void;
     isLoading?: boolean;
+    disabled?: boolean;
 };
 
-export const Button = ({ children, onPress, isLoading }: Props) => {
+export const Button = ({ children, onPress, disabled, isLoading }: Props) => {
     return (
-        <Container onPress={onPress}>
+        <Container onPress={onPress} disabled={!!disabled}>
             {!isLoading ? (
                 <Label>{children}</Label>
             ) : (

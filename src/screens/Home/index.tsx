@@ -18,6 +18,8 @@ import React from "react";
 import { SearchInput } from "../../components/SearchInput";
 import { CategoryCard } from "../../components/CategoryCard";
 import { RecipeCard } from "../../components/RecipeCard";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../../routes/app.routes";
 
 const CATEGORIES = [
     {
@@ -73,7 +75,9 @@ const RECIPES = [
     },
 ];
 
-export const Home = () => {
+type Props = StackScreenProps<RootStackParamList>;
+
+export const Home = ({ navigation: { navigate } }: Props) => {
     const insets = useSafeAreaInsets();
     const { width } = Dimensions.get("window");
     return (
@@ -89,7 +93,9 @@ export const Home = () => {
                 <SearchContainer>
                     <SearchInput placeholder="Pesquisar receitas" />
                 </SearchContainer>
-                <StyledCustomSearchButton />
+                <StyledCustomSearchButton
+                    onPress={() => navigate("CustomSearch")}
+                />
 
                 <Row>
                     <Title> Categorias</Title>

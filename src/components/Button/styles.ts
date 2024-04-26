@@ -1,7 +1,10 @@
 import styled from "styled-components/native";
 
-export const Container = styled.TouchableOpacity`
-    background-color: ${(props) => props.theme.colors.primary};
+export const Container = styled.TouchableOpacity<{ disabled: boolean }>`
+    background-color: ${(props) =>
+        props.disabled
+            ? props.theme.colors.gray100
+            : props.theme.colors.primary};
     padding: ${(props) => props.theme.spaces.lg};
     border-radius: 10px;
 
