@@ -113,7 +113,11 @@ export const CustomSearch = ({ navigation }: Props) => {
 
                 <Button
                     children="Buscar receita"
-                    onPress={() => {}}
+                    onPress={() =>
+                        navigation.navigate("CustomSearchList", {
+                            ingredients: selectedIngredients,
+                        })
+                    }
                     disabled={selectedIngredients.length === 0}
                 />
             </Container>
