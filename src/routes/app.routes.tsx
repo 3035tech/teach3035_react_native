@@ -5,6 +5,7 @@ import { CustomSearch } from "../screens/CustomSearch";
 import { CustomSearchList } from "../screens/CustomSearchList";
 import { AllRecipes } from "../screens/AllRecipes";
 import { Categories } from "../screens/Categories";
+import { RecipeList } from "../screens/RecipeList";
 
 type NewType = NavigatorScreenParams<TabNavigationParamsList>;
 
@@ -16,6 +17,9 @@ export type RootStackParamList = {
     };
     AllRecipes: undefined;
     Categories: undefined;
+    RecipeList: {
+        category: string;
+    };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -37,6 +41,7 @@ const AppRootStack = () => {
             />
             <Stack.Screen name="AllRecipes" component={AllRecipes} />
             <Stack.Screen name="Categories" component={Categories} />
+            <Stack.Screen name="RecipeList" component={RecipeList} />
         </Stack.Navigator>
     );
 };

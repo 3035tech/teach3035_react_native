@@ -10,7 +10,7 @@ import {
     StyledSearchInput,
 } from "./styles";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
-import { Pressable, TouchableOpacity } from "react-native";
+import { Pressable, TouchableOpacity, View } from "react-native";
 import { Chip } from "../../components/Chip";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { SearchInput } from "../../components/SearchInput";
@@ -48,7 +48,7 @@ export const CustomSearch = ({ navigation }: Props) => {
 
     console.log(selectedIngredients, "selectedIngredients");
     return (
-        <>
+        <View style={{ flex: 1, backgroundColor: "#fff" }}>
             <Header
                 title="Busca Personalizada"
                 onBack={() => navigation.goBack()}
@@ -121,6 +121,6 @@ export const CustomSearch = ({ navigation }: Props) => {
                     disabled={selectedIngredients.length === 0}
                 />
             </Container>
-        </>
+        </View>
     );
 };

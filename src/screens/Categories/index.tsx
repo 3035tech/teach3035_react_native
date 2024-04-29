@@ -23,7 +23,13 @@ export const Categories = ({ navigation }: Props) => {
                 }}
                 renderItem={({ item: category }) => (
                     <>
-                        <Row>
+                        <Row
+                            onPress={() =>
+                                navigation.navigate("RecipeList", {
+                                    category: category.name,
+                                })
+                            }
+                        >
                             <Title>{category.name}</Title>
                             <Icon
                                 name="chevron-forward"

@@ -1,22 +1,12 @@
 import styled from "styled-components/native";
+import { SearchInput } from "../../components/SearchInput";
 
 export const Container = styled.View`
     flex: 1;
     background: ${(props) => props.theme.colors.white};
 `;
-
-export const Row = styled.TouchableOpacity`
-    flex-direction: row;
-    align-items: center;
-    gap: ${(props) => props.theme.spaces.lg};
-    margin-top: ${(props) => props.theme.spaces.lg};
-    margin-left: ${(props) => props.theme.spaces.xxxl};
-`;
-
-export const Title = styled.Text`
-    font-family: ${(props) => props.theme.fonts.bold};
-    font-size: ${(props) => props.theme.fontSize.xl};
-    color: ${(props) => props.theme.colors.gray900};
+export const StyledSearchInput = styled(SearchInput)`
+    margin: ${(props) => props.theme.spaces.xxl};
 `;
 
 export const NoResultsFound = styled.Text`

@@ -1,29 +1,29 @@
 import React, { useState } from "react";
-import { Header } from "../../components/Header";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { RECIPES } from "../../mocks/recipes";
 import { RecipeCard } from "../../components/RecipeCard";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes/app.routes";
-import { Container, StyledSearchInput } from "./styles";
+import { Header } from "../../components/Header";
+import { Container, NoResultsFound, StyledSearchInput } from "./styles";
 
-type Props = StackScreenProps<RootStackParamList, "AllRecipes">;
-export const AllRecipes = ({ navigation }: Props) => {
+type Props = StackScreenProps<RootStackParamList, "RecipeList">;
+export const RecipeList = ({ navigation, route: { params } }: Props) => {
+    const { category } = params;
     const [search, setSearch] = useState("");
 
+    const filteredRecipes = RECIPES.filter(
+        (recipe) =>
+            recipe.category === category &&
+            recipe.name.toLowerCase().includes(search.toLowerCase())
+    );
     return (
         <Container>
-            <Header
-                onBack={() => {
-                    navigation.goBack();
-                }}
-                title="Todas as receitas"
-            />
+            <Header onBack={() => navigation.goBack()} title={category} />
             <StyledSearchInput
-                placeholder="Digite o ingrediente para buscar"
+                placeholder="Pesquisar receitas"
                 value={search}
                 onChangeText={setSearch}
-                blurOnSubmit
             />
             <FlatList
                 contentContainerStyle={{
@@ -35,7 +35,7 @@ export const AllRecipes = ({ navigation }: Props) => {
                 }}
                 keyExtractor={(item) => String(item.id)}
                 numColumns={2}
-                data={RECIPES}
+                data={filteredRecipes}
                 renderItem={({ item }) => (
                     <RecipeCard
                         id={String(item.id)}
@@ -49,6 +49,11 @@ export const AllRecipes = ({ navigation }: Props) => {
                         onPress={() => console.log("onPress")}
                     />
                 )}
+                ListEmptyComponent={
+                    <NoResultsFound>
+                        Não há nenhuma receita nesta categoria
+                    </NoResultsFound>
+                }
             />
         </Container>
     );
