@@ -10,20 +10,28 @@ import { Container, NoResultsFound, StyledSearchInput } from "./styles";
 type Props = StackScreenProps<RootStackParamList, "RecipeList">;
 export const RecipeList = ({ navigation, route: { params } }: Props) => {
     const { category } = params;
-    const [search, setSearch] = useState("");
+    const searchTerm = params?.searchTerm || "";
+    console.log(searchTerm, "searchTerm");
+    console.log(category, "category");
 
     const filteredRecipes = RECIPES.filter(
         (recipe) =>
             recipe.category === category &&
-            recipe.name.toLowerCase().includes(search.toLowerCase())
+            recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     return (
         <Container>
             <Header onBack={() => navigation.goBack()} title={category} />
             <StyledSearchInput
+                value={searchTerm}
+                editable={false}
                 placeholder="Pesquisar receitas"
-                value={search}
-                onChangeText={setSearch}
+                onPress={() => {
+                    navigation.navigate("Search", {
+                        callbackScreen: "RecipeList",
+                        category,
+                    });
+                }}
             />
             <FlatList
                 contentContainerStyle={{
@@ -50,9 +58,7 @@ export const RecipeList = ({ navigation, route: { params } }: Props) => {
                     />
                 )}
                 ListEmptyComponent={
-                    <NoResultsFound>
-                        Não há nenhuma receita nesta categoria
-                    </NoResultsFound>
+                    <NoResultsFound>Não há nenhuma receita</NoResultsFound>
                 }
             />
         </Container>

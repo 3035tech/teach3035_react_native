@@ -39,7 +39,15 @@ export const Home = ({ navigation: { navigate } }: Props) => {
                     </View>
                 </Header>
                 <SearchContainer>
-                    <SearchInput placeholder="Pesquisar receitas" />
+                    <SearchInput
+                        editable={false}
+                        placeholder="Pesquisar receitas"
+                        onPress={() => {
+                            navigate("Search", {
+                                callbackScreen: "AllRecipes",
+                            });
+                        }}
+                    />
                 </SearchContainer>
                 <StyledCustomSearchButton
                     onPress={() => navigate("CustomSearch")}

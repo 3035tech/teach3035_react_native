@@ -5,11 +5,15 @@ import { RECIPES } from "../../mocks/recipes";
 import { RecipeCard } from "../../components/RecipeCard";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes/app.routes";
-import { Container, StyledSearchInput } from "./styles";
+import { Container, StyledSearchInput, NoResultsFound } from "./styles";
 
 type Props = StackScreenProps<RootStackParamList, "AllRecipes">;
-export const AllRecipes = ({ navigation }: Props) => {
-    const [search, setSearch] = useState("");
+export const AllRecipes = ({ navigation, route: { params } }: Props) => {
+    const searchTerm = params?.searchTerm || "";
+
+    const filteredRecipes = RECIPES.filter((recipe) =>
+        recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
     return (
         <Container>
@@ -20,9 +24,14 @@ export const AllRecipes = ({ navigation }: Props) => {
                 title="Todas as receitas"
             />
             <StyledSearchInput
+                editable={false}
                 placeholder="Digite o ingrediente para buscar"
-                value={search}
-                onChangeText={setSearch}
+                value={searchTerm}
+                onPress={() => {
+                    navigation.navigate("Search", {
+                        callbackScreen: "AllRecipes",
+                    });
+                }}
                 blurOnSubmit
             />
             <FlatList
@@ -35,7 +44,10 @@ export const AllRecipes = ({ navigation }: Props) => {
                 }}
                 keyExtractor={(item) => String(item.id)}
                 numColumns={2}
-                data={RECIPES}
+                data={filteredRecipes}
+                ListEmptyComponent={
+                    <NoResultsFound>Não há nenhuma receita</NoResultsFound>
+                }
                 renderItem={({ item }) => (
                     <RecipeCard
                         id={String(item.id)}
