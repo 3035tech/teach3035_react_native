@@ -3,10 +3,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BackArrow, Container, Content, Title } from "./styles";
 
 type Props = {
+    mode?: "light" | "dark";
     title: string;
     onBack?: () => void;
 };
-export const Header = ({ title, onBack }: Props) => {
+export const Header = ({ title, onBack, mode = "dark" }: Props) => {
     const { top } = useSafeAreaInsets();
     return (
         <Container top={top}>
@@ -19,7 +20,7 @@ export const Header = ({ title, onBack }: Props) => {
                         onPress={onBack}
                     />
                 ) : null}
-                <Title>{title}</Title>
+                <Title mode={mode}>{title}</Title>
             </Content>
         </Container>
     );

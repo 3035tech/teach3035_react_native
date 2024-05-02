@@ -7,6 +7,7 @@ import { AllRecipes } from "../screens/AllRecipes";
 import { Categories } from "../screens/Categories";
 import { RecipeList } from "../screens/RecipeList";
 import { Search } from "../screens/Search";
+import { RecipeInfo } from "../screens/RecipeInfo";
 
 type NewType = NavigatorScreenParams<TabNavigationParamsList>;
 
@@ -27,6 +28,10 @@ export type RootStackParamList = {
     Search: {
         callbackScreen: keyof RootStackParamList;
         category?: string;
+    };
+    RecipeInfo: {
+        recipeName: string;
+        recipeId: number;
     };
 };
 
@@ -51,6 +56,7 @@ const AppRootStack = () => {
             <Stack.Screen name="Categories" component={Categories} />
             <Stack.Screen name="RecipeList" component={RecipeList} />
             <Stack.Screen name="Search" component={Search} />
+            <Stack.Screen name="RecipeInfo" component={RecipeInfo} />
         </Stack.Navigator>
     );
 };

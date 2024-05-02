@@ -58,7 +58,12 @@ export const AllRecipes = ({ navigation, route: { params } }: Props) => {
                         isFavorited={item.isFavorited}
                         preparationTime={item.preparationTime}
                         onFavoritePress={() => console.log("favorito")}
-                        onPress={() => console.log("onPress")}
+                        onPress={() =>
+                            navigation.navigate("RecipeInfo", {
+                                recipeId: item.id,
+                                recipeName: item.name,
+                            })
+                        }
                     />
                 )}
             />
