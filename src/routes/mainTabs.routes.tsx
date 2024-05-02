@@ -3,6 +3,7 @@ import { Home } from "../screens/Home";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Favorites } from "../screens/Favorites";
+import { Profile } from "../screens/Profile";
 
 export type TabNavigationParamsList = {
     Favorites: undefined;
@@ -83,7 +84,7 @@ export const MainTabs = () => {
             />
             <Tab.Screen
                 name="Profile"
-                component={Home}
+                component={Profile}
                 options={{
                     tabBarLabel: "Perfil",
                     tabBarIcon: ({ color }) => (

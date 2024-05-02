@@ -1,13 +1,15 @@
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BackArrow, Container, Content, Title } from "./styles";
+import { Ionicons } from "@expo/vector-icons";
 
 type Props = {
     mode?: "light" | "dark";
     title: string;
     onBack?: () => void;
+    logout?: boolean;
 };
-export const Header = ({ title, onBack, mode = "dark" }: Props) => {
+export const Header = ({ title, onBack, mode = "dark", logout }: Props) => {
     const { top } = useSafeAreaInsets();
     return (
         <Container top={top}>
@@ -21,6 +23,15 @@ export const Header = ({ title, onBack, mode = "dark" }: Props) => {
                     />
                 ) : null}
                 <Title mode={mode}>{title}</Title>
+
+                {logout ? (
+                    <Ionicons
+                        name="exit-outline"
+                        size={25}
+                        color="#F98549"
+                        onPress={() => {}}
+                    />
+                ) : null}
             </Content>
         </Container>
     );

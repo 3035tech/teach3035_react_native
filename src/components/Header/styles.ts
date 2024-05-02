@@ -13,6 +13,7 @@ export const Content = styled.View`
     flex: 1;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
 `;
 export const BackArrow = styled(Ionicons)`
     margin-right: ${({ theme }) => theme.spaces.lg};
