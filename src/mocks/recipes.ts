@@ -7,7 +7,7 @@ export const RECIPES = [
         calories: 300,
         imageUri:
             "https://img.freepik.com/fotos-gratis/vista-superior-da-torta-de-maca-de-acao-de-gracas-com-talheres-e-folhas_23-2148638999.jpg?size=626&ext=jpg&ga=GA1.1.1395880969.1709769600&semt=ais",
-        isFavorited: false,
+        isFavorited: true,
         category: "Lanches",
         description: "Torta gostosa para seu lanche",
         ingredients: ["5 maçãs", "300g de açúcar", "300ml de leite"],

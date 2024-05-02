@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Home } from "../screens/Home";
 import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { Favorites } from "../screens/Favorites";
 
 export type TabNavigationParamsList = {
     Favorites: undefined;
@@ -34,7 +35,7 @@ export const MainTabs = () => {
         >
             <Tab.Screen
                 name="Favorites"
-                component={Home}
+                component={Favorites}
                 options={{
                     tabBarLabel: "Favoritos",
                     tabBarIcon: ({ color }) => (
