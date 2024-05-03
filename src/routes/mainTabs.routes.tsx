@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Favorites } from "../screens/Favorites";
 import { Profile } from "../screens/Profile";
+import CreateRecipeStack from "./createRecipe.routes";
 
 export type TabNavigationParamsList = {
     Favorites: undefined;
@@ -66,7 +67,7 @@ export const MainTabs = () => {
             />
             <Tab.Screen
                 name="CreateRecipe"
-                component={Home}
+                component={CreateRecipeStack}
                 options={{
                     tabBarLabel: "Criar",
                     tabBarIcon: ({ color }) => (

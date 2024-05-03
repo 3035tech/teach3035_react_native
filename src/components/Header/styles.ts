@@ -13,7 +13,6 @@ export const Content = styled.View`
     flex: 1;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
 `;
 export const BackArrow = styled(Ionicons)`
     margin-right: ${({ theme }) => theme.spaces.lg};
@@ -26,4 +25,10 @@ export const Title = styled.Text<{ mode?: "light" | "dark" }>`
         props.mode === "light"
             ? props.theme.colors.white
             : props.theme.colors.gray900};
+`;
+
+export const RightSide = styled.View`
+    flex: 1;
+    flex-direction: row;
+    justify-content: flex-end;
 `;

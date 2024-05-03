@@ -4,8 +4,14 @@ export const InputContainer = styled.View`
     margin-bottom: ${(props) => props.theme.spaces.lg};
 `;
 
-export const InputField = styled.TextInput<{ isValid: boolean }>`
+export const InputField = styled.TextInput<{
+    isValid: boolean;
+    multiline?: boolean;
+}>`
     padding: ${(props) => props.theme.spaces.lg};
+    padding-bottom: ${(props) =>
+        props.multiline ? "50px" : props.theme.spaces.lg};
+
     border-radius: 10px;
     font-family: ${(props) => props.theme.fonts.regular};
     color: ${(props) => props.theme.colors.gray100};

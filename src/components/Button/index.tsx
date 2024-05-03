@@ -9,9 +9,15 @@ type Props = TouchableOpacityProps & {
     disabled?: boolean;
 };
 
-export const Button = ({ children, onPress, disabled, isLoading }: Props) => {
+export const Button = ({
+    children,
+    onPress,
+    disabled,
+    isLoading,
+    ...props
+}: Props) => {
     return (
-        <Container onPress={onPress} disabled={!!disabled}>
+        <Container onPress={onPress} disabled={!!disabled} {...props}>
             {!isLoading ? (
                 <Label>{children}</Label>
             ) : (
