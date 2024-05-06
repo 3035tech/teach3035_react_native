@@ -55,7 +55,10 @@ export const SetRecipeIngredients = ({
                     filteredIngredient.slice(1)
             );
 
-        console.log(formattedIngredients);
+        navigation.navigate("SetIngredientsDescription", {
+            ...params,
+            ingredients: formattedIngredients,
+        });
     };
     return (
         <Container>

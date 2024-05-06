@@ -3,6 +3,7 @@ import { NewRecipeCreation } from "../screens/NewRecipeCreation";
 import { SetRecipeInformation } from "../screens/SetRecipeInformation";
 import { RecipeDifficulty } from "../models/Recipe";
 import { SetRecipeIngredients } from "../screens/SetRecipeIngredients";
+import { SetIngredientsDescription } from "../screens/SetIngredientsDescription";
 
 export type CreateRecipeStackParamsList = {
     NewRecipeCreation: undefined;
@@ -19,6 +20,15 @@ export type CreateRecipeStackParamsList = {
         difficulty: RecipeDifficulty;
         calories: number;
         preparationTime: number;
+    };
+    SetIngredientsDescription: {
+        name: string;
+        description: string;
+        category: string;
+        difficulty: RecipeDifficulty;
+        calories: number;
+        preparationTime: number;
+        ingredients: string[];
     };
 };
 
@@ -40,6 +50,10 @@ const CreateRecipeStack = () => {
             <Stack.Screen
                 name="SetRecipeIngredients"
                 component={SetRecipeIngredients}
+            />
+            <Stack.Screen
+                name="SetIngredientsDescription"
+                component={SetIngredientsDescription}
             />
         </Stack.Navigator>
     );

@@ -6,7 +6,7 @@ import { Controller, useFormContext } from "react-hook-form";
 type Props = TextInputProps & {
     name: string;
     placeholder: string;
-    label: string;
+    label?: string;
 };
 
 export const Input = ({ name, placeholder, label, ...props }: Props) => {
@@ -20,7 +20,7 @@ export const Input = ({ name, placeholder, label, ...props }: Props) => {
                 fieldState: { error },
             }) => (
                 <InputContainer>
-                    <Label>{label}</Label>
+                    {label ? <Label>{label}</Label> : null}
                     <InputField
                         placeholder={placeholder}
                         onChangeText={onChange}

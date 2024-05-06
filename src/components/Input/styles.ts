@@ -11,7 +11,7 @@ export const InputField = styled.TextInput<{
     padding: ${(props) => props.theme.spaces.lg};
     padding-bottom: ${(props) =>
         props.multiline ? "50px" : props.theme.spaces.lg};
-
+    margin-top: ${(props) => props.theme.spaces.sm};
     border-radius: 10px;
     font-family: ${(props) => props.theme.fonts.regular};
     color: ${(props) => props.theme.colors.gray100};
