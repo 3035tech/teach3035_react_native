@@ -23,7 +23,10 @@ type Props = StackScreenProps<
     CreateRecipeStackParamsList,
     "SetRecipeInformation"
 >;
-export const SetRecipeInformation = ({ navigation }: Props) => {
+export const SetRecipeInformation = ({
+    navigation,
+    route: { params },
+}: Props) => {
     const methods = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -33,8 +36,12 @@ export const SetRecipeInformation = ({ navigation }: Props) => {
     });
     const { handleSubmit } = methods;
 
-    const handleNext = () => {
-        console.log("handle next");
+    const handleNext = ({ calories, preparationTime }: FormData) => {
+        navigation.navigate("SetRecipeIngredients", {
+            ...params,
+            calories,
+            preparationTime,
+        });
     };
     return (
         <Container>
