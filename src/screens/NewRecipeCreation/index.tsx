@@ -53,8 +53,18 @@ export const NewRecipeCreation = ({ navigation }: Props) => {
     });
     const { handleSubmit } = methods;
 
-    const handleNext = () => {
-        console.log("handle next");
+    const handleNext = ({
+        name,
+        description,
+        difficulty,
+        category,
+    }: FormData) => {
+        navigation.navigate("SetRecipeInformation", {
+            name,
+            description,
+            difficulty,
+            category,
+        });
     };
     return (
         <Container>
