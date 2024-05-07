@@ -9,7 +9,7 @@ type Props = TextInputProps & {
     label?: string;
 };
 
-export const Input = ({ name, placeholder, label, ...props }: Props) => {
+export const Input = ({ name, placeholder, label, style, ...props }: Props) => {
     const { control } = useFormContext();
     return (
         <Controller
@@ -19,7 +19,7 @@ export const Input = ({ name, placeholder, label, ...props }: Props) => {
                 field: { onChange, onBlur, ...field },
                 fieldState: { error },
             }) => (
-                <InputContainer>
+                <InputContainer style={style}>
                     {label ? <Label>{label}</Label> : null}
                     <InputField
                         placeholder={placeholder}

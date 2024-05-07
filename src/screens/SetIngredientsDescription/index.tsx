@@ -55,7 +55,10 @@ export const SetIngredientsDescription = ({
     const { handleSubmit } = methods;
 
     const handleNext = ({ ingredients }: FormData) => {
-        console.log(ingredients, "INGREDIENTS");
+        navigation.navigate("SetPreparationSteps", {
+            ...params,
+            ingredientsDescription: ingredients.map((item) => item.description),
+        });
     };
     return (
         <Container>
