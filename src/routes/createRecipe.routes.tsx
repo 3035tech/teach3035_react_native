@@ -5,6 +5,7 @@ import { RecipeDifficulty } from "../models/Recipe";
 import { SetRecipeIngredients } from "../screens/SetRecipeIngredients";
 import { SetIngredientsDescription } from "../screens/SetIngredientsDescription";
 import { SetPreparationSteps } from "../screens/SetPreparationSteps";
+import { SetRecipeImages } from "../screens/SetRecipeImages";
 
 export type CreateRecipeStackParamsList = {
     NewRecipeCreation: undefined;
@@ -41,6 +42,18 @@ export type CreateRecipeStackParamsList = {
         ingredients: string[];
         ingredientsDescription: string[];
     };
+
+    SetRecipeImages: {
+        name: string;
+        description: string;
+        category: string;
+        difficulty: RecipeDifficulty;
+        calories: number;
+        preparationTime: number;
+        ingredients: string[];
+        ingredientsDescription: string[];
+        preparationSteps: string[];
+    };
 };
 
 const Stack = createStackNavigator<CreateRecipeStackParamsList>();
@@ -70,6 +83,7 @@ const CreateRecipeStack = () => {
                 name="SetPreparationSteps"
                 component={SetPreparationSteps}
             />
+            <Stack.Screen name="SetRecipeImages" component={SetRecipeImages} />
         </Stack.Navigator>
     );
 };

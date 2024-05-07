@@ -1,14 +1,15 @@
+import { Dimensions } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import styled from "styled-components/native";
 import { ImageBackground as ExpoImageBackground, Image } from "expo-image";
-import Icon from "react-native-vector-icons/Ionicons";
-import { Dimensions } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { SelectImageInput } from "../../components/SelectImageInput";
+import { Button } from "../../components/Button";
 
-const { height } = Dimensions.get("window");
+const { height, width } = Dimensions.get("window");
 
 export const Container = styled.View`
     flex: 1;
-    background: ${(props) => props.theme.colors.white};
+    background-color: ${({ theme }) => theme.colors.white};
 `;
 
 export const ImageBackground = styled(ExpoImageBackground)`
@@ -25,25 +26,6 @@ export const Overlay = styled.View`
 
     position: absolute;
     top: 0;
-`;
-
-export const RecipeImage = styled(Image)`
-    width: 330px;
-
-    height: ${height * 0.4}px;
-    border-radius: 10px;
-    border-width: 1px;
-    border-color: ${(props) => props.theme.colors.white};
-    margin-right: ${(props) => props.theme.spaces.lg};
-`;
-
-export const FavoriteIcon = styled(Icon)<{ isFavorited?: boolean }>`
-    color: ${(props) =>
-        props.isFavorited
-            ? props.theme.colors.primary
-            : props.theme.colors.white};
-
-    align-self: flex-end;
 `;
 
 export const MainInfo = styled.View`
@@ -107,15 +89,6 @@ export const Item = styled.TouchableOpacity`
     margin-bottom: ${(props) => props.theme.spaces.xl};
 `;
 
-export const Selection = styled.View<{ isSelected: boolean }>`
-    width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    border: 1px solid ${(props) => props.theme.colors.primary};
-    background-color: ${(props) =>
-        props.isSelected ? props.theme.colors.primary : "transparent"};
-`;
-
 export const IngredientLabel = styled.Text`
     color: ${(props) => props.theme.colors.gray900};
     font-family: ${(props) => props.theme.fonts.regular};
@@ -138,4 +111,29 @@ export const Order = styled.Text`
     color: ${(props) => props.theme.colors.white};
     font-family: ${(props) => props.theme.fonts.bold};
     font-size: ${(props) => props.theme.fontSize.xs};
+`;
+
+export const SelectImageContainer = styled.View`
+    width: ${width - 48}px;
+    height: ${height * 0.4}px;
+    border-radius: 10px;
+    background-color: #eee;
+    border-width: 2px;
+    border-style: dashed;
+    border-color: ${({ theme }) => theme.colors.gray100};
+    align-items: center;
+    justify-content: center;
+`;
+export const SelectImageText = styled.Text`
+    font-family: ${(props) => props.theme.fonts.bold};
+    font-size: ${(props) => props.theme.fontSize.md};
+    color: ${({ theme }) => theme.colors.primary};
+`;
+
+export const StyledSelectImageInput = styled(SelectImageInput)`
+    margin-right: ${(props) => props.theme.spaces.xl};
+`;
+
+export const StyledButton = styled(Button)`
+    margin: ${(props) => props.theme.spaces.lg};
 `;

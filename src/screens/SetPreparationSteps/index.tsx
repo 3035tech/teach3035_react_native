@@ -64,7 +64,10 @@ export const SetPreparationSteps = ({
     });
 
     const handleNext = ({ steps }: FormData) => {
-        console.log(steps);
+        navigation.navigate("SetRecipeImages", {
+            ...params,
+            preparationSteps: steps.map((step) => step.description),
+        });
     };
     return (
         <Container>
