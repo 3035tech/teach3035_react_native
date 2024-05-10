@@ -2,6 +2,8 @@ import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { BackArrow, Container, Content, RightSide, Title } from "./styles";
 import { Ionicons } from "@expo/vector-icons";
+import { signOut } from "firebase/auth";
+import { auth } from "../../libs/firebase";
 
 type Props = {
     mode?: "light" | "dark";
@@ -30,7 +32,7 @@ export const Header = ({ title, onBack, mode = "dark", logout }: Props) => {
                             name="exit-outline"
                             size={25}
                             color="#F98549"
-                            onPress={() => {}}
+                            onPress={() => signOut(auth)}
                         />
                     </RightSide>
                 ) : null}

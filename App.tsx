@@ -4,6 +4,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { StatusBar } from "react-native";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { Provider } from "jotai";
 
 export default function App() {
     return (
@@ -15,7 +16,9 @@ export default function App() {
                             barStyle="light-content"
                             backgroundColor="#F98549"
                         />
-                        <Routes />
+                        <Provider>
+                            <Routes />
+                        </Provider>
                     </BottomSheetModalProvider>
                 </Theme>
             </SafeAreaProvider>

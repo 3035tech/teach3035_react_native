@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../../assets/logo.svg";
 import {
     Background,
@@ -20,6 +20,9 @@ import { useTheme } from "styled-components";
 import { TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthRoutesStackParamsList } from "../../routes/auth.routes";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../../libs/firebase";
+import { ToastMessage } from "../../components/ToastMessage";
 
 const FormSchema = z.object({
     name: z
@@ -40,12 +43,33 @@ type FormSchemaType = z.infer<typeof FormSchema>;
 type Props = StackScreenProps<AuthRoutesStackParamsList, "Signup">;
 
 export const Signup = ({ navigation: { navigate } }: Props) => {
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const theme = useTheme();
     const methods = useForm<FormSchemaType>({
         resolver: zodResolver(FormSchema),
     });
 
     const { handleSubmit } = methods;
+
+    const handleSignUp = async ({ name, email, password }: FormSchemaType) => {
+        setError("");
+        setLoading(true);
+        try {
+            const response = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+            updateProfile(response.user, {
+                displayName: name,
+            });
+        } catch (error) {
+            setError("Não foi possível criar a sua conta");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <KeyboardAwareScrollView
@@ -58,6 +82,7 @@ export const Signup = ({ navigation: { navigate } }: Props) => {
             <Background>
                 <Logo xml={logo} />
                 <Card>
+                    {error ? <ToastMessage>{error}</ToastMessage> : null}
                     <Title>Cadastre-se</Title>
                     <FormProvider {...methods}>
                         <Input
@@ -88,10 +113,9 @@ export const Signup = ({ navigation: { navigate } }: Props) => {
                     </FormProvider>
                     <Bottom>
                         <Button
+                            isLoading={loading}
                             children="Cadastrar"
-                            onPress={handleSubmit(() =>
-                                console.log("cadastrar")
-                            )}
+                            onPress={handleSubmit(handleSignUp)}
                         />
                         <Row>
                             <EnterAccount>Não possui conta?</EnterAccount>

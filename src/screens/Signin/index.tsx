@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../../assets/logo.svg";
 import {
     Background,
@@ -20,6 +20,9 @@ import { useTheme } from "styled-components";
 import { TouchableOpacity } from "react-native";
 import { StackScreenProps } from "@react-navigation/stack";
 import { AuthRoutesStackParamsList } from "../../routes/auth.routes";
+import { ToastMessage } from "../../components/ToastMessage";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../libs/firebase";
 
 const FormSchema = z.object({
     email: z
@@ -36,12 +39,27 @@ type FormSchemaType = z.infer<typeof FormSchema>;
 type Props = StackScreenProps<AuthRoutesStackParamsList, "Signin">;
 
 export const Signin = ({ navigation: { navigate } }: Props) => {
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+
     const theme = useTheme();
     const methods = useForm<FormSchemaType>({
         resolver: zodResolver(FormSchema),
     });
 
     const { handleSubmit } = methods;
+
+    const handleSignIn = async ({ email, password }: FormSchemaType) => {
+        setLoading(true);
+        setError("");
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+        } catch (error) {
+            setError("E-mail ou senha inválida");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <KeyboardAwareScrollView
@@ -54,6 +72,7 @@ export const Signin = ({ navigation: { navigate } }: Props) => {
             <Background>
                 <Logo xml={logo} />
                 <Card>
+                    {error ? <ToastMessage>{error}</ToastMessage> : null}
                     <Title>Entrar</Title>
                     <FormProvider {...methods}>
                         <Input
@@ -78,8 +97,9 @@ export const Signin = ({ navigation: { navigate } }: Props) => {
                     </FormProvider>
                     <Bottom>
                         <Button
+                            isLoading={loading}
                             children="Entrar"
-                            onPress={handleSubmit(() => console.log("entrar"))}
+                            onPress={handleSubmit(handleSignIn)}
                         />
                         <Row>
                             <CreateAccount>Não possui conta?</CreateAccount>
