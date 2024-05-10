@@ -22,10 +22,12 @@ import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes/app.routes";
 import { RECIPES } from "../../mocks/recipes";
 import { CATEGORIES } from "../../mocks/categories";
+import { useUser } from "../../hooks/useUser";
 
 type Props = StackScreenProps<RootStackParamList>;
 
 export const Home = ({ navigation: { navigate } }: Props) => {
+    const [user] = useUser();
     const insets = useSafeAreaInsets();
     const { width } = Dimensions.get("window");
     return (
@@ -34,7 +36,7 @@ export const Home = ({ navigation: { navigate } }: Props) => {
                 <Header>
                     <Image source={avatar} />
                     <View>
-                        <Name>Olá, Jonas!</Name>
+                        <Name>Olá, {user?.displayName}</Name>
                         <Welcome>Qual receita vamos aprender hoje?</Welcome>
                     </View>
                 </Header>
