@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Content, Title, StyledButton } from "./styles";
 import { Header } from "../../components/Header";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -10,6 +10,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { OptionSetInput } from "../../components/OptionSetInput";
 import { RECIPE_DIFFICULTY_MAP } from "../../constants/recipeDifficulty";
+
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../libs/firebase";
+import { FirebaseRecipeCategory } from "../../libs/firebase/models/recipeCategory";
 
 const formSchema = z.object({
     name: z.string({ required_error: "Preencha o nome da receita" }).min(4, {
@@ -44,6 +48,12 @@ const CATEGORIES = [
 type FormData = z.infer<typeof formSchema>;
 type Props = StackScreenProps<CreateRecipeStackParamsList, "NewRecipeCreation">;
 export const NewRecipeCreation = ({ navigation }: Props) => {
+    const [categories, setCategories] = useState<
+        {
+            label: string;
+            value: string;
+        }[]
+    >([]);
     const methods = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -52,6 +62,25 @@ export const NewRecipeCreation = ({ navigation }: Props) => {
         },
     });
     const { handleSubmit } = methods;
+
+    const getCategories = async () => {
+        try {
+            const categoriesDocs = await getDocs(
+                collection(db, "recipe_categories")
+            );
+
+            const categories = categoriesDocs.docs.map((item) => {
+                const data = item.data();
+
+                return {
+                    label: data.name as string,
+                    value: data.name as string,
+                };
+            });
+
+            setCategories(categories);
+        } catch (error) {}
+    };
 
     const handleNext = ({
         name,
@@ -66,6 +95,10 @@ export const NewRecipeCreation = ({ navigation }: Props) => {
             category,
         });
     };
+
+    useEffect(() => {
+        getCategories();
+    }, []);
     return (
         <Container>
             <Header
@@ -97,7 +130,7 @@ export const NewRecipeCreation = ({ navigation }: Props) => {
                         <OptionSetInput
                             name="category"
                             label="Categoria"
-                            options={CATEGORIES}
+                            options={categories}
                         />
                     </FormProvider>
                 </ScrollView>

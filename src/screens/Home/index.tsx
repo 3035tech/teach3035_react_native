@@ -14,22 +14,51 @@ import {
 import { ScrollView, Image, View, FlatList, Dimensions } from "react-native";
 
 import avatar from "../../assets/avatar.png";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SearchInput } from "../../components/SearchInput";
 import { CategoryCard } from "../../components/CategoryCard";
 import { RecipeCard } from "../../components/RecipeCard";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes/app.routes";
 import { RECIPES } from "../../mocks/recipes";
-import { CATEGORIES } from "../../mocks/categories";
 import { useUser } from "../../hooks/useUser";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../libs/firebase";
+import { FirebaseRecipeCategory } from "../../libs/firebase/models/recipeCategory";
 
 type Props = StackScreenProps<RootStackParamList>;
 
 export const Home = ({ navigation: { navigate } }: Props) => {
+    const [categories, setCategories] = useState<
+        FirebaseRecipeCategory[] | null
+    >(null);
+
     const [user] = useUser();
     const insets = useSafeAreaInsets();
     const { width } = Dimensions.get("window");
+
+    const getCategories = async () => {
+        try {
+            const categoriesDocs = await getDocs(
+                collection(db, "recipe_categories")
+            );
+
+            const categories = categoriesDocs.docs.map((item) => {
+                const data = item.data();
+
+                return {
+                    ...data,
+                    id: item.id,
+                } as FirebaseRecipeCategory;
+            });
+
+            setCategories(categories);
+        } catch (error) {}
+    };
+
+    useEffect(() => {
+        getCategories();
+    }, []);
     return (
         <Container topInset={insets.top}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -64,7 +93,7 @@ export const Home = ({ navigation: { navigate } }: Props) => {
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => String(item.id)}
-                    data={CATEGORIES}
+                    data={categories}
                     contentContainerStyle={{
                         paddingTop: 16,
                         paddingLeft: 20,
