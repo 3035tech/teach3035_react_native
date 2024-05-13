@@ -1,5 +1,4 @@
-import React from "react";
-import { StackScreenProps } from "@react-navigation/stack";
+import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { z } from "zod";
 import { Header } from "../../components/Header";
@@ -33,6 +32,13 @@ import { Accordion } from "../../components/Accordion";
 import { RECIPE_DIFFICULTY_MAP } from "../../constants/recipeDifficulty";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { db, storage } from "../../libs/firebase";
+import { addDoc, collection, doc } from "firebase/firestore";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { TabNavigationParamsList } from "../../routes/mainTabs.routes";
+import { StackScreenProps } from "@react-navigation/stack";
 
 const formSchema = z.object({
     images: z.array(
@@ -44,8 +50,12 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-type Props = StackScreenProps<CreateRecipeStackParamsList, "SetRecipeImages">;
+type Props = CompositeScreenProps<
+    StackScreenProps<CreateRecipeStackParamsList, "SetRecipeImages">,
+    BottomTabScreenProps<TabNavigationParamsList>
+>;
 export const SetRecipeImages = ({ navigation, route: { params } }: Props) => {
+    const [loading, setLoading] = useState(false);
     const {
         name,
         calories,
@@ -91,8 +101,73 @@ export const SetRecipeImages = ({ navigation, route: { params } }: Props) => {
         }
     };
 
-    const handleCreateRecipe = ({ images }: FormData) => {
-        console.log(params, images, "DADOS");
+    const createIngredients = () => {
+        ingredients.forEach((ingredient) => {
+            addDoc(collection(db, "ingredients"), {
+                name: ingredient,
+            });
+        });
+    };
+    const fetchImagesUris = async (images: string[]) => {
+        const promises = images.map((image) => {
+            return fetch(image);
+        });
+
+        return await Promise.all(promises);
+    };
+    const getImagesBlobs = async (images: Response[]) => {
+        const promises = images.map((image) => {
+            return image.blob();
+        });
+
+        return await Promise.all(promises);
+    };
+
+    const createImages = async (recipeId: string, images: string[]) => {
+        const imagesData = await fetchImagesUris(images);
+
+        const imagesBlobs = await getImagesBlobs(imagesData);
+
+        const uploadPromises = imagesBlobs.map((imageBlob, index) => {
+            const storageRef = ref(storage, `${recipeId}/${index}.png`);
+
+            return uploadBytesResumable(storageRef, imageBlob);
+        });
+
+        const uploadTasks = await Promise.all(uploadPromises);
+
+        return await Promise.all(
+            uploadTasks.map((item) => getDownloadURL(item.ref))
+        );
+    };
+
+    const handleCreateRecipe = async ({ images }: FormData) => {
+        setLoading(true);
+
+        try {
+            const recipeRef = doc(collection(db, "recipes"));
+            const imageUris = images.map((image) => image.uri);
+            const imagesUris = await createImages(recipeRef.id, imageUris);
+
+            await addDoc(collection(db, "recipes"), {
+                name,
+                description,
+                ingredients,
+                category,
+                difficulty,
+                calories,
+                favoritedBy: {},
+                images: imagesUris,
+                mainImageUri: imagesUris[0],
+                preparationTime,
+            });
+            createIngredients();
+            navigation.navigate("Home");
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
     };
     return (
         <Container>
@@ -209,7 +284,10 @@ export const SetRecipeImages = ({ navigation, route: { params } }: Props) => {
                     </Accordion>
                 </AccordionContainer>
             </ScrollView>
-            <StyledButton onPress={handleSubmit(handleCreateRecipe)}>
+            <StyledButton
+                onPress={handleSubmit(handleCreateRecipe)}
+                isLoading={loading}
+            >
                 Criar receita
             </StyledButton>
         </Container>
