@@ -4,6 +4,7 @@ import {
     Container,
     Header,
     Name,
+    NoResultsFound,
     Row,
     SearchContainer,
     StyledCustomSearchButton,
@@ -11,7 +12,14 @@ import {
     Welcome,
 } from "./styles";
 
-import { ScrollView, Image, View, FlatList, Dimensions } from "react-native";
+import {
+    ScrollView,
+    Image,
+    View,
+    FlatList,
+    Dimensions,
+    ActivityIndicator,
+} from "react-native";
 
 import avatar from "../../assets/avatar.png";
 import React, { useEffect, useState } from "react";
@@ -20,18 +28,28 @@ import { CategoryCard } from "../../components/CategoryCard";
 import { RecipeCard } from "../../components/RecipeCard";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes/app.routes";
-import { RECIPES } from "../../mocks/recipes";
 import { useUser } from "../../hooks/useUser";
-import { collection, getDocs } from "firebase/firestore";
+import {
+    collection,
+    getDocs,
+    limit,
+    onSnapshot,
+    query,
+} from "firebase/firestore";
 import { db } from "../../libs/firebase";
 import { FirebaseRecipeCategory } from "../../libs/firebase/models/recipeCategory";
+import { Recipe } from "../../models/Recipe";
+import { FirebaseRecipe } from "../../libs/firebase/models/recipes";
 
 type Props = StackScreenProps<RootStackParamList>;
 
 export const Home = ({ navigation: { navigate } }: Props) => {
+    const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState<
         FirebaseRecipeCategory[] | null
     >(null);
+
+    const [recipes, setRecipes] = useState<Recipe[]>([]);
 
     const [user] = useUser();
     const insets = useSafeAreaInsets();
@@ -55,10 +73,30 @@ export const Home = ({ navigation: { navigate } }: Props) => {
             setCategories(categories);
         } catch (error) {}
     };
+    const getRecipes = async () => {
+        return onSnapshot(query(collection(db, "recipes")), {
+            next: async (snapshot) => {
+                setLoading(true);
+                const allRecipes = snapshot.docs.map<Recipe>((doc) => {
+                    const data = doc.data() as FirebaseRecipe;
+                    return {
+                        ...data,
+                        imageUri: data.mainImageUri,
+                        id: doc.id,
+                        isFavorited: data.favoritedBy[user!?.uid],
+                    };
+                });
+                setRecipes(allRecipes);
+            },
+            complete: () => setLoading(true),
+        });
+    };
 
     useEffect(() => {
         getCategories();
+        getRecipes();
     }, []);
+
     return (
         <Container topInset={insets.top}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -117,12 +155,19 @@ export const Home = ({ navigation: { navigate } }: Props) => {
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item) => String(item.id)}
-                    data={RECIPES}
+                    data={recipes}
                     contentContainerStyle={{
                         paddingTop: 16,
                         paddingLeft: 20,
                         gap: 12,
                     }}
+                    ListEmptyComponent={
+                        !loading ? (
+                            <NoResultsFound>
+                                Nenhuma receita encontrada
+                            </NoResultsFound>
+                        ) : null
+                    }
                     renderItem={({ item }) => (
                         <RecipeCard
                             style={{ width: width * 0.45 }}
@@ -131,7 +176,7 @@ export const Home = ({ navigation: { navigate } }: Props) => {
                             calories={item.calories}
                             imageUri={item.imageUri}
                             difficulty={item.difficulty}
-                            isFavorited={item.isFavorited}
+                            isFavorited={!!item.isFavorited}
                             preparationTime={item.preparationTime}
                             onFavoritePress={() => console.log("favorito")}
                             onPress={() => console.log("onPress")}
