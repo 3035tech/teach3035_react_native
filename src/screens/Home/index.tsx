@@ -12,14 +12,7 @@ import {
     Welcome,
 } from "./styles";
 
-import {
-    ScrollView,
-    Image,
-    View,
-    FlatList,
-    Dimensions,
-    ActivityIndicator,
-} from "react-native";
+import { ScrollView, Image, View, FlatList, Dimensions } from "react-native";
 
 import avatar from "../../assets/avatar.png";
 import React, { useEffect, useState } from "react";
@@ -31,10 +24,13 @@ import { RootStackParamList } from "../../routes/app.routes";
 import { useUser } from "../../hooks/useUser";
 import {
     collection,
+    deleteField,
+    doc,
     getDocs,
     limit,
     onSnapshot,
     query,
+    updateDoc,
 } from "firebase/firestore";
 import { db } from "../../libs/firebase";
 import { FirebaseRecipeCategory } from "../../libs/firebase/models/recipeCategory";
@@ -90,6 +86,23 @@ export const Home = ({ navigation: { navigate } }: Props) => {
             },
             complete: () => setLoading(true),
         });
+    };
+
+    const handlePressFavorite = async (
+        recipeId: string,
+        isFavorited: boolean
+    ) => {
+        try {
+            if (isFavorited) {
+                await updateDoc(doc(db, "recipes", recipeId), {
+                    [`favoritedBy.${user?.uid}`]: deleteField(),
+                });
+            } else {
+                await updateDoc(doc(db, "recipes", recipeId), {
+                    [`favoritedBy.${user?.uid}`]: true,
+                });
+            }
+        } catch (error) {}
     };
 
     useEffect(() => {
@@ -178,7 +191,9 @@ export const Home = ({ navigation: { navigate } }: Props) => {
                             difficulty={item.difficulty}
                             isFavorited={!!item.isFavorited}
                             preparationTime={item.preparationTime}
-                            onFavoritePress={() => console.log("favorito")}
+                            onFavoritePress={() =>
+                                handlePressFavorite(item.id, !!item.isFavorited)
+                            }
                             onPress={() => console.log("onPress")}
                             heightVariant="small"
                         />

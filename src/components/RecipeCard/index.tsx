@@ -48,6 +48,7 @@ export const RecipeCard = ({
 
                 <Content>
                     <FavoriteIcon
+                        onPress={onFavoritePress}
                         isFavorited={isFavorited}
                         name={isFavorited ? "heart" : "heart-outline"}
                         size={30}

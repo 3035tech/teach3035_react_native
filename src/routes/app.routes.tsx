@@ -31,7 +31,7 @@ export type RootStackParamList = {
     };
     RecipeInfo: {
         recipeName: string;
-        recipeId: number;
+        recipeId: string;
     };
 };
 

@@ -40,6 +40,7 @@ export const MainTabs = () => {
                 component={Favorites}
                 options={{
                     tabBarLabel: "Favoritos",
+                    unmountOnBlur: true,
                     tabBarIcon: ({ color }) => (
                         <Icon
                             name={
@@ -56,6 +57,7 @@ export const MainTabs = () => {
                 component={Home}
                 options={{
                     tabBarLabel: "Início",
+                    unmountOnBlur: true,
                     tabBarIcon: ({ color }) => (
                         <Icon
                             name={color === "#F6833C" ? "home" : "home-outline"}
