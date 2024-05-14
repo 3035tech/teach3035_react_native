@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { StackScreenProps } from "@react-navigation/stack";
 
@@ -36,18 +36,75 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { RECIPE_DIFFICULTY_MAP } from "../../constants/recipeDifficulty";
 import { Recipe } from "../../models/Recipe";
 import { Accordion } from "../../components/Accordion";
+import { deleteField, doc, getDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../libs/firebase";
+import { FirebaseRecipe } from "../../libs/firebase/models/recipes";
+import { useUser } from "../../hooks/useUser";
+
+type RecipeInfo = Omit<Recipe, "imageUri"> & {
+    images: string[];
+    preparationSteps: string[];
+    ingredientsDescription: string[];
+};
+
+type FirebaseRecipeInfo = FirebaseRecipe & {
+    ingredientsDescription: string[];
+    preparationSteps: string[];
+};
 export const RecipeInfo = ({
     navigation,
     route: { params },
 }: StackScreenProps<RootStackParamList, "RecipeInfo">) => {
+    const [user] = useUser();
+
+    const [recipe, setRecipe] = useState<RecipeInfo>();
     const [selectedIngredients, setSelectedIngredients] = useState<string[]>(
         []
     );
     const { recipeId, recipeName } = params;
 
-    const filteredRecipe = RECIPES.find(
-        (recipe) => recipe.id === recipeId
-    ) as Recipe;
+    const getRecipeInfo = async () => {
+        try {
+            const recipeQuery = doc(db, "recipes", recipeId);
+
+            const docs = await getDoc(recipeQuery);
+
+            const data = docs.data() as FirebaseRecipeInfo;
+
+            setRecipe({
+                id: docs.id,
+                name: data.name,
+                calories: data.calories,
+                category: data.category,
+                description: data.description,
+                difficulty: data.difficulty,
+                images: data.images,
+                preparationTime: data.preparationTime,
+                isFavorited: data.favoritedBy?.[user?.uid!],
+                preparationSteps: data.preparationSteps,
+                ingredientsDescription: data.ingredientsDescription,
+            });
+        } catch (error) {}
+    };
+
+    const handlePressFavorite = async () => {
+        const isFavorited = recipe?.isFavorited;
+        try {
+            getRecipeInfo();
+
+            if (isFavorited) {
+                await updateDoc(doc(db, `recipes`, recipeId), {
+                    [`favoritedBy.${user?.uid}`]: deleteField(),
+                });
+            } else {
+                await updateDoc(doc(db, `recipes`, recipeId), {
+                    [`favoritedBy.${user?.uid}`]: true,
+                });
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const toggleSelectedIngredient = (
         ingredient: string,
@@ -61,6 +118,10 @@ export const RecipeInfo = ({
             setSelectedIngredients((state) => [...state, ingredient]);
         }
     };
+
+    useEffect(() => {
+        getRecipeInfo();
+    }, []);
     return (
         <Container>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -69,7 +130,7 @@ export const RecipeInfo = ({
                         borderBottomLeftRadius: 40,
                         borderBottomRightRadius: 40,
                     }}
-                    source={filteredRecipe?.images[0]}
+                    source={recipe?.images[0]}
                     blurRadius={10}
                     contentFit="cover"
                     transition={500}
@@ -81,7 +142,7 @@ export const RecipeInfo = ({
                         title={recipeName}
                     />
                     <FlatList
-                        data={filteredRecipe?.images || []}
+                        data={recipe?.images || []}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ padding: 30 }}
@@ -103,11 +164,11 @@ export const RecipeInfo = ({
                             }}
                         >
                             <Title>{recipeName}</Title>
-                            <TouchableOpacity onPress={() => {}}>
+                            <TouchableOpacity onPress={handlePressFavorite}>
                                 <FavoriteIcon
-                                    isFavorited={filteredRecipe?.isFavorited}
+                                    isFavorited={recipe?.isFavorited}
                                     name={
-                                        !filteredRecipe?.isFavorited
+                                        !recipe?.isFavorited
                                             ? "heart-outline"
                                             : "heart"
                                     }
@@ -115,14 +176,14 @@ export const RecipeInfo = ({
                                 />
                             </TouchableOpacity>
                         </View>
-                        <Description>{filteredRecipe?.description}</Description>
+                        <Description>{recipe?.description}</Description>
                     </MainInfo>
 
                     <GeneralInfo>
                         <Row>
                             <Icon name="time" size={12} color="#303030" />
                             <DetailText>
-                                {filteredRecipe?.preparationTime} min
+                                {recipe?.preparationTime} min
                             </DetailText>
                         </Row>
                         <Row>
@@ -132,11 +193,7 @@ export const RecipeInfo = ({
                                 color="#303030"
                             />
                             <DetailText>
-                                {
-                                    RECIPE_DIFFICULTY_MAP[
-                                        filteredRecipe?.difficulty
-                                    ]
-                                }
+                                {RECIPE_DIFFICULTY_MAP[recipe?.difficulty]}
                             </DetailText>
                         </Row>
 
@@ -147,16 +204,14 @@ export const RecipeInfo = ({
                                 color="#303030"
                             />
 
-                            <DetailText>
-                                {filteredRecipe?.calories}Kcal
-                            </DetailText>
+                            <DetailText>{recipe?.calories}Kcal</DetailText>
                         </Row>
                     </GeneralInfo>
                 </ImageBackground>
 
                 <AccordionContainer>
                     <Accordion title="Ingredientes">
-                        {filteredRecipe?.ingredients.map(
+                        {recipe?.ingredientsDescription.map(
                             (ingredient, index) => {
                                 const isSelected =
                                     selectedIngredients.includes(ingredient);
@@ -185,20 +240,18 @@ export const RecipeInfo = ({
                     </Accordion>
 
                     <Accordion title="Modo de Preparo">
-                        {filteredRecipe?.preparationSteps.map(
-                            (ingredient, index) => {
-                                return (
-                                    <Item key={index}>
-                                        <Dot>
-                                            <Order>{index + 1}</Order>
-                                        </Dot>
-                                        <IngredientLabel>
-                                            {ingredient}
-                                        </IngredientLabel>
-                                    </Item>
-                                );
-                            }
-                        )}
+                        {recipe?.preparationSteps.map((ingredient, index) => {
+                            return (
+                                <Item key={index}>
+                                    <Dot>
+                                        <Order>{index + 1}</Order>
+                                    </Dot>
+                                    <IngredientLabel>
+                                        {ingredient}
+                                    </IngredientLabel>
+                                </Item>
+                            );
+                        })}
                     </Accordion>
                 </AccordionContainer>
             </ScrollView>

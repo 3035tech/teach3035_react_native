@@ -153,6 +153,7 @@ export const SetRecipeImages = ({ navigation, route: { params } }: Props) => {
                 name,
                 description,
                 ingredients,
+                ingredientsDescription,
                 category,
                 difficulty,
                 calories,
@@ -160,6 +161,7 @@ export const SetRecipeImages = ({ navigation, route: { params } }: Props) => {
                 images: imagesUris,
                 mainImageUri: imagesUris[0],
                 preparationTime,
+                preparationSteps,
             });
             createIngredients();
             navigation.navigate("Home");

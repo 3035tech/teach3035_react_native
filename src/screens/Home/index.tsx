@@ -194,7 +194,12 @@ export const Home = ({ navigation: { navigate } }: Props) => {
                             onFavoritePress={() =>
                                 handlePressFavorite(item.id, !!item.isFavorited)
                             }
-                            onPress={() => console.log("onPress")}
+                            onPress={() =>
+                                navigate("RecipeInfo", {
+                                    recipeId: item.id,
+                                    recipeName: item.name,
+                                })
+                            }
                             heightVariant="small"
                         />
                     )}
