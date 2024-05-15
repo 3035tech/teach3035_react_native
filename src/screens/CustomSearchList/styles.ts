@@ -1,10 +1,21 @@
 import styled from "styled-components/native";
-import { RecipeCard } from "../../components/RecipeCard";
 
+export const Container = styled.View`
+    flex: 1;
+    background: ${(props) => props.theme.colors.white};
+`;
 export const IngredientsContainer = styled.View`
     flex-direction: row;
     flex-wrap: wrap;
     gap: ${(props) => props.theme.spaces.md};
 
     margin-top: ${(props) => props.theme.spaces.md};
+`;
+export const NoResultsFound = styled.Text`
+    font-size: ${(props) => props.theme.fontSize.sm};
+
+    font-family: ${(props) => props.theme.fonts.regular};
+    color: ${(props) => props.theme.colors.gray200};
+    text-align: center;
+    margin-left: ${({ theme }) => theme.spaces.xl};
 `;

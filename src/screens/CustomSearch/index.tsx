@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Header } from "../../components/Header";
 import { RootStackParamList } from "../../routes/app.routes";
 import { StackScreenProps } from "@react-navigation/stack";
@@ -15,17 +15,33 @@ import { Chip } from "../../components/Chip";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { SearchInput } from "../../components/SearchInput";
 import { Button } from "../../components/Button";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../libs/firebase";
 
 type Props = StackScreenProps<RootStackParamList, "CustomSearch">;
-
-const INGREDIENTS = ["Arroz", "Feijao", "Maçã", "Frango"];
 
 export const CustomSearch = ({ navigation }: Props) => {
     const [selectedIngredients, setSelectedIngredients] = useState<string[]>(
         []
     );
 
+    const [ingredients, setIngredients] = useState<string[]>([]);
+
     const [search, setSearch] = useState("");
+
+    const getIngredients = async () => {
+        try {
+            const ref = collection(db, "ingredients");
+            const docs = await getDocs(ref);
+
+            const ingredients = docs.docs.map<string>(
+                (item) => item.data().name
+            );
+            setIngredients([...new Set(ingredients)]);
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const handleAddIngredient = (ingredient: string) => {
         setSelectedIngredients((prevIngredients) => [
@@ -40,13 +56,15 @@ export const CustomSearch = ({ navigation }: Props) => {
         setSelectedIngredients(newIngredients);
     };
 
-    const filteredIngredients = INGREDIENTS.filter(
+    const filteredIngredients = ingredients.filter(
         (ingredient) =>
             ingredient.toLowerCase().includes(search.toLowerCase()) &&
             !selectedIngredients.includes(ingredient)
     );
 
-    console.log(selectedIngredients, "selectedIngredients");
+    useEffect(() => {
+        getIngredients();
+    }, []);
     return (
         <View style={{ flex: 1, backgroundColor: "#fff" }}>
             <Header
