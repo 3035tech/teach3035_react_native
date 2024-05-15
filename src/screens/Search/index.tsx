@@ -12,12 +12,15 @@ import { Container, SearchContainer } from "./styles";
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes/app.routes";
 import { Filters } from "../../components/Filters";
+import { RecipeDifficulty } from "../../constants/recipeDifficulty";
 
+type DifficultyOption = RecipeDifficulty;
 type Props = StackScreenProps<RootStackParamList, "Search">;
 export const Search = ({ navigation, route: { params } }: Props) => {
     const [search, setSearch] = useState("");
-    const { callbackScreen, category } = params;
+    const { callbackScreen } = params;
 
+    const [difficulties, setDifficulties] = useState([] as DifficultyOption[]);
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 
     const renderBackdrop = useCallback(
@@ -42,7 +45,7 @@ export const Search = ({ navigation, route: { params } }: Props) => {
     const handleSubmit = () => {
         navigation.replace(callbackScreen, {
             searchTerm: search,
-            category,
+            difficulties,
         });
     };
     return (
@@ -74,7 +77,13 @@ export const Search = ({ navigation, route: { params } }: Props) => {
                 enablePanDownToClose
                 backdropComponent={renderBackdrop}
             >
-                <Filters handleClose={handleCloseBottomSheet} />
+                <Filters
+                    handleClose={handleCloseBottomSheet}
+                    onSubmit={({ difficulties }) => {
+                        handleCloseBottomSheet();
+                        setDifficulties(difficulties);
+                    }}
+                />
             </BottomSheetModal>
         </Container>
     );

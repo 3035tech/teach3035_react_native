@@ -8,6 +8,7 @@ import { Categories } from "../screens/Categories";
 import { RecipeList } from "../screens/RecipeList";
 import { Search } from "../screens/Search";
 import { RecipeInfo } from "../screens/RecipeInfo";
+import { RecipeDifficulty } from "../constants/recipeDifficulty";
 
 type NewType = NavigatorScreenParams<TabNavigationParamsList>;
 
@@ -19,6 +20,7 @@ export type RootStackParamList = {
     };
     AllRecipes?: {
         searchTerm?: string;
+        difficulties?: ("EASY" | "MEDIUM" | "HARD")[];
     };
     Categories: undefined;
     RecipeList: {
@@ -27,7 +29,7 @@ export type RootStackParamList = {
     };
     Search: {
         callbackScreen: keyof RootStackParamList;
-        category?: string;
+        difficulties?: RecipeDifficulty[];
     };
     RecipeInfo: {
         recipeName: string;

@@ -94,7 +94,15 @@ export const Filters = ({ handleClose, onSubmit }: Props) => {
                 </AccordionContent>
             </ScrollView>
             <ButtonContainer>
-                <Button onPress={() => {}}>Aplicar filtros</Button>
+                <Button
+                    onPress={() => {
+                        if (onSubmit) {
+                            onSubmit({ difficulties: selectedDifficulties });
+                        }
+                    }}
+                >
+                    Aplicar filtros
+                </Button>
                 <TouchableOpacity
                     onPress={() => {
                         setSelectedDifficulties([]);
