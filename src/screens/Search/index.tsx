@@ -18,7 +18,7 @@ type DifficultyOption = RecipeDifficulty;
 type Props = StackScreenProps<RootStackParamList, "Search">;
 export const Search = ({ navigation, route: { params } }: Props) => {
     const [search, setSearch] = useState("");
-    const { callbackScreen } = params;
+    const { callbackScreen, category } = params;
 
     const [difficulties, setDifficulties] = useState([] as DifficultyOption[]);
     const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -46,6 +46,7 @@ export const Search = ({ navigation, route: { params } }: Props) => {
         navigation.replace(callbackScreen, {
             searchTerm: search,
             difficulties,
+            category,
         });
     };
     return (

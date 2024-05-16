@@ -154,7 +154,11 @@ export const Home = ({ navigation: { navigate } }: Props) => {
                         <CategoryCard
                             categoryName={item.name}
                             imageUri={item.imageUri}
-                            onPress={() => {}}
+                            onPress={() =>
+                                navigate("RecipeList", {
+                                    category: item.name,
+                                })
+                            }
                         />
                     )}
                 />

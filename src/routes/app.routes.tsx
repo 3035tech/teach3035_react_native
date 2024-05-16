@@ -24,12 +24,15 @@ export type RootStackParamList = {
     };
     Categories: undefined;
     RecipeList: {
+        difficulties?: ("EASY" | "MEDIUM" | "HARD")[];
         category: string;
         searchTerm?: string;
     };
     Search: {
+        defaultSearchTerm?: string;
         callbackScreen: keyof RootStackParamList;
         difficulties?: RecipeDifficulty[];
+        category?: string;
     };
     RecipeInfo: {
         recipeName: string;
